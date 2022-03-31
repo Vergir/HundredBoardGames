@@ -37,9 +37,13 @@ func parseGameNode(game_node *html.Node) Game {
 
 	titleCell := firstCell.NextSibling.NextSibling.NextSibling.NextSibling
 	titleYearLabel := titleCell.FirstChild.NextSibling.NextSibling.NextSibling.FirstChild.NextSibling
-	yearPiece := titleYearLabel.NextSibling.NextSibling.FirstChild.Data
+	yearNode := titleYearLabel.NextSibling.NextSibling
 	title := titleYearLabel.FirstChild.Data
-	year, _ := strconv.Atoi(yearPiece[1 : len(yearPiece)-1])
+	year := 0
+	if yearNode != nil {
+		yearNodeText := yearNode.FirstChild.Data
+		year, _ = strconv.Atoi(yearNodeText[1 : len(yearNodeText)-1])
+	}
 
 	geekRatingCell := titleCell.NextSibling.NextSibling
 	geekRatingLabel := whitespace_regexp.ReplaceAllString(geekRatingCell.FirstChild.Data, "")
@@ -110,10 +114,10 @@ func read_games() ([]Game, error) {
 	return games, nil
 }
 
-func download_games_data() error {
-	const pages_to_read = 100
+func download_games_data(pages_to_read int) error {
 	var games []Game
 	for page_number := 1; page_number <= pages_to_read; page_number++ {
+		fmt.Println("Reading page " + fmt.Sprint(page_number))
 		resp, err := http.Get("https://boardgamegeek.com/browse/boardgame/page/" + fmt.Sprint(page_number))
 		if err != nil {
 			return err
@@ -136,11 +140,6 @@ func download_games_data() error {
 }
 
 func main() {
-	err := download_games_data()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
 	games, error := read_games()
 	if error != nil {
 		log.Fatalln(error)
