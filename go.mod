@@ -1,4 +1,4 @@
-module sample-app
+module hundred-board-games
 
 go 1.18
 
