@@ -1,0 +1,8 @@
+<h1>{{.PageTitle}}</h1>
+<ul>
+    {{range .Chapters}}
+        <li>
+            <a href="{{.Url}}" >{{.Title}}</a>
+        </li>
+    {{end}}
+</ul>

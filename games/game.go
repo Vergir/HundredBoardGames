@@ -22,8 +22,8 @@ func NewGame(title string, year int, geekRating float64, votersRating float64, v
 	return game
 }
 
-func PrintGame(game Game) {
-	fmt.Printf("%50v (%4v) | Geek: %4.3v | Algo: %4.3v | Vote: %4.3v (%v)\n",
+func (game Game) String() string {
+	return fmt.Sprintf("%50v (%4v) | Geek: %4.3v | Algo: %4.3v | Vote: %4.3v (%v)\n",
 		game.Title, game.Year, game.GeekRating, game.AlgoRating, game.VotersRating, game.VotersCount)
 }
 

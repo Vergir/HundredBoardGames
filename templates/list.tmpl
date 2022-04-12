@@ -1,0 +1,11 @@
+<h1>{{.PageTitle}}</h1>
+<ul>
+    {{range .Games}}
+        <li>
+            <span>{{.Title}}</span> 
+            <span>({{.Year}})</span> | 
+            <span>{{.GeekRating}}</span> | 
+            <span>{{.AlgoRating}}</span>
+        </li>
+    {{end}}
+</ul>

@@ -1,24 +1,30 @@
 package main
 
 import (
-	"fmt"
 	"hundred-board-games/games"
+	"hundred-board-games/server"
+	"hundred-board-games/server/pages"
+	"net/http"
 )
 
-func main() {
+func handleListPage(r *http.Request) string {
+
 	gamesList, _ := games.ReadGamesFromStorage()
 
-	topGeek := games.GetTopGames(gamesList, games.SORT_BY_GEEK_RATING, 50)
-	for _, e := range topGeek {
-		games.PrintGame(e)
-	}
+	response, _ := pages.RenderListPage(gamesList)
 
-	fmt.Println()
-	fmt.Println()
-	fmt.Println()
+	return response
+}
 
-	topAlgo := games.GetTopGames(gamesList, games.SORT_BY_ALGO_RATING, 50)
-	for _, e := range topAlgo {
-		games.PrintGame(e)
-	}
+func handleIndexPage(r *http.Request) string {
+	response, _ := pages.RenderIndexPage()
+
+	return response
+}
+
+func main() {
+	server.AddHandler(server.PATH_INDEX, handleIndexPage)
+	server.AddHandler(server.PATH_LIST, handleListPage)
+
+	server.Start()
 }

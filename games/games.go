@@ -3,11 +3,11 @@ package games
 import "sort"
 
 const (
-	SORT_BY_GEEK_RATING = iota
-	SORT_BY_ALGO_RATING = iota
+	SORT_BY_GEEK_RATING = "geek"
+	SORT_BY_ALGO_RATING = "algo"
 )
 
-func formSorter(games []Game, sortType int) func(a, b int) bool {
+func formSorter(games []Game, sortType string) func(a, b int) bool {
 	var sorter func(a, b int) bool
 
 	switch sortType {
@@ -24,7 +24,7 @@ func formSorter(games []Game, sortType int) func(a, b int) bool {
 	return sorter
 }
 
-func GetTopGames(games []Game, sortType int, topN uint) []Game {
+func GetTopGames(games []Game, sortType string, topN uint) []Game {
 	sort.Slice(games, formSorter(games, sortType))
 
 	return games[:topN]
