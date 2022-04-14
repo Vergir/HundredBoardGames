@@ -1,3 +1,18 @@
 body {
-    background-color: #AAA;
+    background-color: #D5E0F4;
+    font-family: Helvetica;
 }
+
+.gamesList {
+    list-style: none;
+}
+
+.game {
+    border-bottom: 1px solid #BBB;
+    line-height: 60px;
+}
+
+.gameTitle {
+    font-weight: bold;
+    font-size: 20px;
+  }

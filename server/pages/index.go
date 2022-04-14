@@ -5,21 +5,30 @@ type chapter struct {
 	Url   string
 }
 
-type indexPageData struct {
+type indexPageTemplateProps struct {
 	PageTitle string
 	Chapters  []chapter
 }
 
-var INDEX_PAGE = newPage("index", "/", "index")
+var INDEX_PAGE = newPage("index", "index", "Hundred Board Games", "/")
 
-func PrepareIndexPageData() any {
-	//TODO: proper chapters
-	data := indexPageData{
-		PageTitle: "TOP GAMES LIST",
-		Chapters: []chapter{
-			{Title: "TOP 100", Url: ""},
-		},
+func (props *indexPageTemplateProps) SetPageTitle(title string) {
+	props.PageTitle = title
+}
+
+func (props *indexPageTemplateProps) GetFinalTemplateProps() any {
+	return *props
+}
+
+func PrepareIndexPageProps() PageProps {
+	chapters := make([]chapter, 0)
+	for _, page := range ALL_PAGES {
+		chapters = append(chapters, chapter{Title: page.Title, Url: page.Url})
 	}
 
-	return data
+	props := indexPageTemplateProps{
+		Chapters: chapters,
+	}
+
+	return &props
 }

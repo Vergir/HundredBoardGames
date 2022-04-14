@@ -1,12 +1,13 @@
 {{ template "header.tmpl" . }}
 <h1>{{.PageTitle}}</h1>
-<ul>
+<ul class="gamesList">
     {{range .Games}}
-        <li>
-            <span>{{.Title}}</span> 
-            <span>({{.Year}})</span> | 
-            <span>{{.GeekRating}}</span> | 
-            <span>{{.AlgoRating}}</span>
+        <li class="game">
+            <span class="gameTitle">{{.Title}}</span>
+            <span class="gameYear">({{.Year}})</span>
+            <span class="gameGeekRating">{{.GeekRating}}</span>
+            <span class="gameAlgoRating">{{.AlgoRating}}</span>
         </li>
     {{end}}
 </ul>
+{{ template "footer.tmpl" . }}

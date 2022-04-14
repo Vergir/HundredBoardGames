@@ -1,16 +1,22 @@
 package pages
 
 type Page struct {
-	Name         string
-	Url          string
+	CodeName     string
 	TemplateName string
+	Title        string
+	Url          string
 }
 
-func newPage(name, url, templateName string) Page {
-	return Page{name, url, templateName}
+type PageProps interface {
+	GetFinalTemplateProps() any
+	SetPageTitle(pageTitle string)
+}
+
+func newPage(codeName, templateName, title, url string) Page {
+	return Page{codeName, templateName, title, url}
 }
 
 var ALL_PAGES = []Page{
-	LIST_PAGE,
+	TOP_PAGE,
 	INDEX_PAGE,
 }

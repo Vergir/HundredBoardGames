@@ -10,9 +10,10 @@ import (
 
 func handleListPage(r *http.Request) string {
 	gamesList, _ := games.ReadGamesFromStorage()
-	data := pages.PrepareListPageData(gamesList)
+	gamesList = games.GetTopGames(gamesList, games.SORT_BY_ALGO_RATING, 250)
+	data := pages.PrepareTopPageProps(gamesList)
 
-	response, err := server.GetAndRenderTemplate(pages.LIST_PAGE.TemplateName, data)
+	response, err := server.GetAndRenderTemplate(pages.TOP_PAGE, data)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -21,9 +22,9 @@ func handleListPage(r *http.Request) string {
 }
 
 func handleIndexPage(r *http.Request) string {
-	data := pages.PrepareIndexPageData()
+	indexPageProps := pages.PrepareIndexPageProps()
 
-	response, err := server.GetAndRenderTemplate(pages.INDEX_PAGE.TemplateName, data)
+	response, err := server.GetAndRenderTemplate(pages.INDEX_PAGE, indexPageProps)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -33,7 +34,7 @@ func handleIndexPage(r *http.Request) string {
 
 func main() {
 	server.AddHandler(pages.INDEX_PAGE.Url, handleIndexPage)
-	server.AddHandler(pages.LIST_PAGE.Url, handleListPage)
+	server.AddHandler(pages.TOP_PAGE.Url, handleListPage)
 
 	server.AddStatic()
 

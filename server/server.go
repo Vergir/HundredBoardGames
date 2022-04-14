@@ -11,15 +11,19 @@ import (
 
 var templates *template.Template = template.Must(template.ParseGlob("templates/*"))
 
-func GetAndRenderTemplate(templateName string, templateData any) (string, error) {
-	template := templates.Lookup(templateName + ".tmpl")
+func GetAndRenderTemplate(page pages.Page, pageProps pages.PageProps) (string, error) {
+	template := templates.Lookup(page.TemplateName + ".tmpl")
 	if template == nil {
 		return "", errors.New("no template found")
 	}
 
+	pageProps.SetPageTitle(page.Title)
+
+	templateProps := pageProps.GetFinalTemplateProps()
+
 	var stringBuilder strings.Builder
 
-	err := template.Execute(&stringBuilder, templateData)
+	err := template.Execute(&stringBuilder, templateProps)
 	if err != nil {
 		return "", err
 	}
