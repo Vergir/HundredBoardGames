@@ -10,7 +10,7 @@ import (
 
 func handleListPage(r *http.Request) string {
 	gamesList, _ := games.ReadGamesFromStorage()
-	gamesList = games.GetTopGames(gamesList, games.SORT_BY_ALGO_RATING, 250)
+	gamesList = games.GetTopGames(gamesList, games.RATING_ID_WILSON, 250)
 	data := pages.PrepareTopPageProps(gamesList)
 
 	response, err := server.GetAndRenderTemplate(pages.TOP_PAGE, data)

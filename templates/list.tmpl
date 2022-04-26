@@ -3,10 +3,10 @@
 <ul class="gamesList">
     {{range .Games}}
         <li class="game">
-            <span class="gameTitle">{{.Title}}</span>
+            <span class="gameTitle">{{.PrimaryTitle}}</span>
             <span class="gameYear">({{.Year}})</span>
-            <span class="gameGeekRating">{{.GeekRating}}</span>
-            <span class="gameAlgoRating">{{.AlgoRating}}</span>
+            <span class="gameGeekRating">{{.BayesRating}}</span>
+            <span class="gameAlgoRating">{{.AvgRating}}</span>
         </li>
     {{end}}
 </ul>

@@ -5,26 +5,68 @@ import (
 	"math"
 )
 
+const (
+	RATING_ID_WILSON = 0
+)
+
 type Game struct {
-	Title        string
-	Year         int
-	GeekRating   float64
-	VotersRating float64
-	VotersCount  uint
-	AlgoRating   float64
+	GeekId              uint
+	PrimaryTitle        string
+	Titles              []string
+	Year                int16
+	Description         string
+	PictureUrl          string
+	MinPlayers          uint8
+	MaxPlayers          uint8
+	CommunityNumPlayers []numPlayersPoll
+	MinPlaytime         uint
+	MaxPlaytime         uint
+	MinAge              uint8
+	CommunityMinAge     []minAgePoll
+	LanguageDependence  []langDepPoll
+	Tags                []tag
+	AvgRating           float64
+	BayesRating         float64
+	RatingNumVotes      uint
+	Ratings             []float64
+	AvgWeight           float64
+	WeightNumVotes      uint
+	Counters            gameCounters
 }
 
-func NewGame(title string, year int, geekRating float64, votersRating float64, votersCount uint) Game {
-	algoRating := calcAlgoRating(votersRating, votersCount)
+type numPlayersPoll struct {
+	NumPlayers          uint8
+	VotedBest           uint
+	VotedRecommended    uint
+	VotedNotRecommended uint
+}
 
-	game := Game{title, year, geekRating, votersRating, votersCount, algoRating}
+type minAgePoll struct {
+	MinAge   uint8
+	NumVotes uint
+}
 
-	return game
+type langDepPoll struct {
+	Level    uint8
+	NumVotes uint
+}
+
+type tag struct {
+	Type string
+	Id   uint
+}
+
+type gameCounters struct {
+	Owned    uint
+	Trading  uint
+	Wanting  uint
+	Wishing  uint
+	Comments uint
 }
 
 func (game Game) String() string {
-	return fmt.Sprintf("%50v (%4v) | Geek: %4.3v | Algo: %4.3v | Vote: %4.3v (%v)\n",
-		game.Title, game.Year, game.GeekRating, game.AlgoRating, game.VotersRating, game.VotersCount)
+	return fmt.Sprintf("[%10v] %50v | Avg: %4.3v | Bayes: %4.3v | NumVotes: (%v)\n",
+		game.GeekId, game.PrimaryTitle, game.AvgRating, game.BayesRating, game.RatingNumVotes)
 }
 
 func wilson(p float64, n uint) float64 {
@@ -43,11 +85,19 @@ func wilson(p float64, n uint) float64 {
 	return result
 }
 
-func calcAlgoRating(votersRating float64, votersCount uint) float64 {
+func calcWilsonRating(votersRating float64, votersCount uint) float64 {
 	wilsonP := votersRating / 100
 	wilsonN := votersCount
 
 	result := wilson(wilsonP, wilsonN) * 100
 
 	return result
+}
+
+func (game *Game) UpdateAlgoRatings() {
+	if cap(game.Ratings) < 256 {
+		game.Ratings = make([]float64, 256)
+	}
+	wilson_rating := calcWilsonRating(game.AvgRating, game.RatingNumVotes)
+	game.Ratings[RATING_ID_WILSON] = wilson_rating
 }
