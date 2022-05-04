@@ -6,21 +6,12 @@ type chapter struct {
 }
 
 type indexPageTemplateProps struct {
-	PageTitle string
-	Chapters  []chapter
+	Chapters []chapter
 }
 
 var INDEX_PAGE = newPage("index", "index", "Hundred Board Games", "/")
 
-func (props *indexPageTemplateProps) SetPageTitle(title string) {
-	props.PageTitle = title
-}
-
-func (props *indexPageTemplateProps) GetFinalTemplateProps() any {
-	return *props
-}
-
-func PrepareIndexPageProps() PageProps {
+func PrepareIndexPageProps() indexPageTemplateProps {
 	chapters := make([]chapter, 0)
 	for _, page := range ALL_PAGES {
 		chapters = append(chapters, chapter{Title: page.Title, Url: page.Url})
@@ -30,5 +21,5 @@ func PrepareIndexPageProps() PageProps {
 		Chapters: chapters,
 	}
 
-	return &props
+	return props
 }

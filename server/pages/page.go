@@ -7,11 +7,6 @@ type Page struct {
 	Url          string
 }
 
-type PageProps interface {
-	GetFinalTemplateProps() any
-	SetPageTitle(pageTitle string)
-}
-
 func newPage(codeName, templateName, title, url string) Page {
 	return Page{codeName, templateName, title, url}
 }

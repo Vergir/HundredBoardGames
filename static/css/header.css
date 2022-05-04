@@ -1,0 +1,22 @@
+
+@font-face {
+    font-family: 'acknowledgement';
+    src: url('/static/fonts/acknowledgement-webfont.woff2') format('woff2'),
+         url('/static/fonts/acknowledgement-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#header {
+    height: 40px;
+    background: #23572B;
+    padding-left: 40px;
+}
+
+.logo {
+    font-family: "Acknowledgement";
+    font-size: 24;
+    line-height: 40px;
+    color: #FFF;
+    text-shadow: 1px 1px 0px black;
+}

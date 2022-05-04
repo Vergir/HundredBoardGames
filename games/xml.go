@@ -272,6 +272,10 @@ func fillCommunityNumPlayers(game *Game, xmlNumPlayersPolls poll) error {
 }
 
 func fillCommunityMinAge(game *Game, xmlMinAgePoll poll) error {
+	game.CommunityMinAge = make([]minAgePoll, 0)
+	if len(xmlMinAgePoll.Results) == 0 {
+		return nil
+	}
 	for _, minAgePollResult := range xmlMinAgePoll.Results[0].Result {
 		ageContainsLetters := len(minAgePollResult.Value) > 2
 		if ageContainsLetters {

@@ -1,5 +1,9 @@
 <head>
-    <title>{{.PageTitle}}</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>{{.Global.PageTitle}}</title>
+    <link rel="stylesheet" href="/static/css/styles.css?{{.Global.Now}}">
 </head>
 <body>
+    <div id="header">
+        <span class="logo">100 Board Games</span>
+    </div>
+    <div id="grid">

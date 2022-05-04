@@ -1,18 +1,133 @@
+@import "header.css";
+
+:root {
+    --game-title-font-size: 32px;
+    --game-title-small-font-size: 26px;
+    --game-title-smaller-font-size: 22px;
+}
+
 body {
-    background-color: #D5E0F4;
+    margin: 0;
+    padding: 0;
+}
+
+#grid {
+    background-color: #ECF4E9;
     font-family: Helvetica;
+
+    display: grid;
+    grid-template-columns: minmax(25px, 1fr) minmax(550px, 800px) minmax(25px, 1fr);
 }
 
 .gamesList {
-    list-style: none;
+    padding: 0 0;
+    grid-column: 2;
 }
 
 .game {
-    border-bottom: 1px solid #BBB;
-    line-height: 60px;
+    background: white;
+    border: 1px solid #CCC;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    padding: 8px;
+    display: grid;
+    grid-template-columns: minmax(26px, 1fr) 100px 16fr 1fr 2fr;
+    grid-template-rows: 32px 20px 24px;
+    gap: 12px 8px;
+    place-items: center;
+}
+
+.gameRank {
+    grid-column: 1;
+    grid-row: 1 / 4;
+    font-size: 30px;
+}
+
+.gameRank--small {
+    font-size: 24px;
+}
+
+.gameRank--smaller {
+    font-size: 18px;
+}
+
+.gamePictureImg {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    height: 100px;
+    width: 100px;
+    object-fit: fill;
+    border-radius: 4px;
 }
 
 .gameTitle {
-    font-weight: bold;
+    grid-column: 3;
+    grid-row: 1;
+    font-size: var(--game-title-font-size);
+    justify-self: start;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.gameTitle--small {
+    font-size: var(--game-title-small-font-size);
+}
+
+
+.gameTitle--smaller {
+    font-size: var(--game-title-smaller-font-size);
+}
+
+.gameMainAttributes {
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: start;
+}
+
+.gameMainAttribute {
+    border-radius: 4px;
+    padding: 3px 5px;
+    margin-right: 4px
+}
+
+.gameMainAttributeSvg {
+    height: 18px;
+    vertical-align: top;
+}
+
+.gameMainAttributeSvg--pale {
+    opacity: 0.25;
+}
+
+.gameLength {
+    background-color: #c3dcf2;
+}
+
+.gameNumPlayers {
+    background-color: #f2cfb0;
+}
+
+.gameComplexity {
+    background-color: #f4c9f0;
+}
+
+.gameMoreArrow {
+    grid-column: 3;
+    grid-row: 3;
+    align-self: end;
+    color: #dbdbdb;
+    transform: translateY(4px);
+}
+
+.gameMoreArrowSvg {
+    height: 20px;
+    width: 60px;
+}
+
+.gameRating {
+    grid-column: 5;
+    grid-row: 1 / 4;
     font-size: 20px;
-  }
+}

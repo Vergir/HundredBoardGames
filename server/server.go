@@ -7,19 +7,36 @@ import (
 	"hundred-board-games/server/pages"
 	"net/http"
 	"strings"
+	"time"
 )
+
+type props struct {
+	Global globalProps
+	Page   pageProps
+}
+
+type globalProps struct {
+	PageTitle string
+	Now       uint
+}
+
+type pageProps any
 
 var templates *template.Template = template.Must(template.ParseGlob("templates/*"))
 
-func GetAndRenderTemplate(page pages.Page, pageProps pages.PageProps) (string, error) {
+func GetAndRenderTemplate(page pages.Page, pageProps any) (string, error) {
 	template := templates.Lookup(page.TemplateName + ".tmpl")
 	if template == nil {
 		return "", errors.New("no template found")
 	}
 
-	pageProps.SetPageTitle(page.Title)
-
-	templateProps := pageProps.GetFinalTemplateProps()
+	templateProps := props{
+		Global: globalProps{
+			PageTitle: page.Title,
+			Now:       uint(time.Now().Unix()),
+		},
+		Page: pageProps,
+	}
 
 	var stringBuilder strings.Builder
 
@@ -43,6 +60,9 @@ func AddHandler(url string, handler func(request *http.Request) string) {
 	}
 
 	http.HandleFunc(path, func(writer http.ResponseWriter, request *http.Request) {
+		//debug
+		templates = template.Must(template.ParseGlob("templates/*"))
+
 		fmt.Fprint(writer, handler(request))
 	})
 }

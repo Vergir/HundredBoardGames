@@ -1,7 +1,6 @@
 {{ template "header.tmpl" . }}
-<h1>{{.PageTitle}}</h1>
 <ul>
-    {{range .Chapters}}
+    {{range .Page.Chapters}}
         <li>
             <a href="{{.Url}}" >{{.Title}}</a>
         </li>
