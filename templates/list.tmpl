@@ -3,7 +3,7 @@
     {{range .Page.Games}}
         <li class="game">
             <div class="{{.RankClass}}">{{.Rank}}</div>
-            <img class="gamePictureImg" src="/static/images/covers/{{.GeekId}}.jpg" />
+            <img class="gamePictureImg" src="{{.PictureHbbUrl}}" />
             <div class="{{.TitleClass}}">{{.PrimaryTitle}}</div>
             <div class="gameMainAttributes">
                 <span class="gameMainAttribute gameLength">

@@ -1,8 +1,10 @@
 package pages
 
 import (
+	"fmt"
 	"html/template"
-	"hundred-board-games/games"
+	"hundred-board-games/code/games"
+	"hundred-board-games/code/utils"
 	"math"
 	"strconv"
 )
@@ -17,13 +19,14 @@ type topPageTemplateProps struct {
 }
 
 type extendedGame struct {
-	Rank       uint
-	Rating     float32
-	RankClass  string
-	TitleClass string
-	Playtime   string
-	Players    string
-	Complexity template.HTML
+	Rank          uint
+	Rating        float32
+	RankClass     string
+	TitleClass    string
+	PictureHbbUrl string
+	Playtime      string
+	Players       string
+	Complexity    template.HTML
 	games.Game
 }
 
@@ -59,6 +62,9 @@ func PrepareTopPageProps(gamesList []games.Game) topPageTemplateProps {
 			titleClass += " gameTitle--small"
 		}
 
+		pictureHbbFilename := utils.FormFullFilename(int(game.GeekId), game.PictureUrl)
+		pictureHbbUrl := fmt.Sprint("/static/images/covers/", pictureHbbFilename)
+
 		playtime := strconv.FormatUint(uint64(game.MinPlaytime), 10)
 		if game.MinPlaytime != game.MaxPlaytime {
 			playtime += "-" + strconv.FormatUint(uint64(game.MaxPlaytime), 10)
@@ -68,11 +74,13 @@ func PrepareTopPageProps(gamesList []games.Game) topPageTemplateProps {
 		if game.MinPlayers != game.MaxPlayers {
 			players += "-" + strconv.FormatUint(uint64(game.MaxPlayers), 10)
 		}
+
 		extendedGame := extendedGame{
 			uint(rank),
 			float32(roundedRating),
 			rankClass,
 			titleClass,
+			pictureHbbUrl,
 			playtime,
 			players,
 			template.HTML(complexity),

@@ -2,14 +2,16 @@ package main
 
 import (
 	"fmt"
-	"hundred-board-games/games"
-	"hundred-board-games/server"
-	"hundred-board-games/server/pages"
+	"hundred-board-games/code/datamining"
+	"hundred-board-games/code/games"
+	"hundred-board-games/code/server"
+	"hundred-board-games/code/server/pages"
 	"net/http"
+	"os"
 )
 
 func handleListPage(r *http.Request) string {
-	gamesList, _ := games.ReadGamesFromStorage()
+	gamesList, _ := datamining.ReadGamesFromStorage()
 	gamesList = games.GetTopGames(gamesList, games.RATING_ID_WILSON, 100)
 	data := pages.PrepareTopPageProps(gamesList)
 
@@ -33,6 +35,13 @@ func handleIndexPage(r *http.Request) string {
 }
 
 func main() {
+	err := datamining.UpdateStorageFromInternet()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("FINISH")
+	os.Exit(0)
+
 	server.AddHandler(pages.INDEX_PAGE.Url, handleIndexPage)
 	server.AddHandler(pages.TOP_PAGE.Url, handleListPage)
 

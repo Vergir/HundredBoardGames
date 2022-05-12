@@ -1,8 +1,9 @@
-package games
+package datamining
 
 import (
 	"encoding/xml"
 	"fmt"
+	"hundred-board-games/code/games"
 	"io"
 	"strconv"
 	"strings"
@@ -147,7 +148,7 @@ type poll struct {
 	} `xml:"results"`
 }
 
-func parseGame(reader io.Reader) (*Game, error) {
+func parseGame(reader io.Reader) (*games.Game, error) {
 	streamBytes, err := io.ReadAll(reader)
 	if err != nil {
 		return nil, err
@@ -169,10 +170,10 @@ func parseGame(reader io.Reader) (*Game, error) {
 	return game, nil
 }
 
-func parseItemsIntoGame(items items) (*Game, error) {
+func parseItemsIntoGame(items items) (*games.Game, error) {
 	item := items.Item
 
-	game := Game{
+	game := games.Game{
 		GeekId:         item.ID,
 		Year:           item.Yearpublished.Value,
 		Description:    item.Description,
@@ -186,7 +187,7 @@ func parseItemsIntoGame(items items) (*Game, error) {
 		RatingNumVotes: item.Statistics.Ratings.Usersrated.Value,
 		AvgWeight:      item.Statistics.Ratings.Averageweight.Value,
 		WeightNumVotes: item.Statistics.Ratings.Numweights.Value,
-		Counters: gameCounters{
+		Counters: games.GameCounters{
 			Owned:    item.Statistics.Ratings.Owned.Value,
 			Trading:  item.Statistics.Ratings.Trading.Value,
 			Wanting:  item.Statistics.Ratings.Wanting.Value,
@@ -229,15 +230,15 @@ func parseItemsIntoGame(items items) (*Game, error) {
 	}
 
 	for _, link := range item.Link {
-		game.Tags = append(game.Tags, tag{Type: link.Type, Id: link.ID})
+		game.Tags = append(game.Tags, games.Tag{Type: link.Type, Id: link.ID})
 	}
 
 	return &game, nil
 }
 
-func fillCommunityNumPlayers(game *Game, xmlNumPlayersPolls poll) error {
+func fillCommunityNumPlayers(game *games.Game, xmlNumPlayersPolls poll) error {
 	for _, numPlayersOption := range xmlNumPlayersPolls.Results {
-		communityNumPlayersEntry := numPlayersPoll{}
+		communityNumPlayersEntry := games.NumPlayersPoll{}
 
 		addOneNumPlayer := false
 		if strings.HasSuffix(numPlayersOption.Numplayers, "+") {
@@ -271,8 +272,8 @@ func fillCommunityNumPlayers(game *Game, xmlNumPlayersPolls poll) error {
 	return nil
 }
 
-func fillCommunityMinAge(game *Game, xmlMinAgePoll poll) error {
-	game.CommunityMinAge = make([]minAgePoll, 0)
+func fillCommunityMinAge(game *games.Game, xmlMinAgePoll poll) error {
+	game.CommunityMinAge = make([]games.MinAgePoll, 0)
 	if len(xmlMinAgePoll.Results) == 0 {
 		return nil
 	}
@@ -287,7 +288,7 @@ func fillCommunityMinAge(game *Game, xmlMinAgePoll poll) error {
 			return err
 		}
 
-		communityMinAgeEntry := minAgePoll{
+		communityMinAgeEntry := games.MinAgePoll{
 			MinAge:   uint8(playerAge),
 			NumVotes: minAgePollResult.Numvotes,
 		}
@@ -298,9 +299,9 @@ func fillCommunityMinAge(game *Game, xmlMinAgePoll poll) error {
 	return nil
 }
 
-func fillLanguageDependance(game *Game, xmlLanguageDependancePoll poll) {
+func fillLanguageDependance(game *games.Game, xmlLanguageDependancePoll poll) {
 	for _, langDepPollResult := range xmlLanguageDependancePoll.Results[0].Result {
-		languageDependanceEntry := langDepPoll{
+		languageDependanceEntry := games.LangDepPoll{
 			Level:    uint8(langDepPollResult.Level),
 			NumVotes: langDepPollResult.Numvotes,
 		}

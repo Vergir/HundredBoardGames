@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
-	"hundred-board-games/server/pages"
+	"hundred-board-games/code/server/pages"
 	"net/http"
 	"strings"
 	"time"
