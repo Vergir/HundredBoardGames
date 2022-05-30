@@ -87,13 +87,7 @@ func parseImagesUrlsJson(reader io.Reader) ([]string, error) {
 }
 
 func ReadGamesFromStorage() ([]games.Game, error) {
-	folder, err := os.Open(GAMES_FOLDER_NAME)
-	if err != nil {
-		return nil, err
-	}
-	defer folder.Close()
-
-	filesNames, err := folder.Readdirnames(0)
+	filesNames, err := utils.ListFolderFiles(GAMES_FOLDER_NAME)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +119,6 @@ func ReadGamesFromStorage() ([]games.Game, error) {
 
 func readGameFromJson(filesNames <-chan string, parsedGames chan<- games.Game) {
 	for fileName, isOpen := <-filesNames; isOpen; fileName, isOpen = <-filesNames {
-		fmt.Printf("[%v] Receive %v (isOpen: %v)\n", utils.GoId(), fileName, isOpen)
 		if fileName == "" {
 			break
 		}

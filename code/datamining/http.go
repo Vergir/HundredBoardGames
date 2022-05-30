@@ -19,7 +19,6 @@ func UpdateStorageFromInternet() error {
 	}
 
 	for _, gameId := range gamesIds {
-		//sleep?
 		fmt.Print("Start game #", gameId, ". ")
 		err = downloadGameData(gameId)
 		if err != nil {
@@ -132,8 +131,8 @@ func downloadGameCover(pictureUrl string, gameId uint) error {
 	return nil
 }
 
-func downloadGameImages(gameId uint) error {
-	url := fmt.Sprintf("https://api.geekdo.com/api/images?gallery=game&pageid=1&showcount=50&size=thumb&sort=hot&objectid=%v", gameId)
+func downloadGameImages(gameBggId uint) error {
+	url := fmt.Sprintf("https://api.geekdo.com/api/images?gallery=game&pageid=1&showcount=50&size=thumb&sort=hot&objectid=%v", gameBggId)
 	gameDataResponse, err := http.Get(url)
 	if err != nil {
 		return err
@@ -156,7 +155,7 @@ func downloadGameImages(gameId uint) error {
 		}
 
 		filename := utils.FormFullFilename(imageIndex, imageUrl)
-		imagePath := filepath.Join("static", "images", "gameimages", fmt.Sprint(gameId), filename)
+		imagePath := filepath.Join(games.FormGameImagesPath(gameBggId), filename)
 
 		err = os.MkdirAll(filepath.Dir(imagePath), os.ModePerm)
 		if err != nil {

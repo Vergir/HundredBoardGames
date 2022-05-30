@@ -1,2 +1,5 @@
     </div>
+{{range .Global.JsPaths}}
+    <script type="module" src="/{{.}}"></script>
+{{end}}
 </body>

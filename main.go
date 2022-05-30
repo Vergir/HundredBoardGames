@@ -4,46 +4,46 @@ import (
 	"fmt"
 	"hundred-board-games/code/datamining"
 	"hundred-board-games/code/games"
+	"hundred-board-games/code/handlers"
+	"hundred-board-games/code/pages"
 	"hundred-board-games/code/server"
-	"hundred-board-games/code/server/pages"
+	"hundred-board-games/code/server/paths"
+	"hundred-board-games/code/templates"
 	"net/http"
-	"os"
 )
 
-func handleListPage(r *http.Request) string {
+func handleListPage(r *http.Request, headers http.Header) (string, error) {
 	gamesList, _ := datamining.ReadGamesFromStorage()
 	gamesList = games.GetTopGames(gamesList, games.RATING_ID_WILSON, 100)
-	data := pages.PrepareTopPageProps(gamesList)
-
-	response, err := server.GetAndRenderTemplate(pages.TOP_PAGE, data)
+	dataPtr, err := pages.PrepareTopPageProps(gamesList)
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 
-	return response
+	response, err := templates.RenderPage(pages.TOP_PAGE, *dataPtr)
+	if err != nil {
+		return "", err
+	}
+
+	return response, nil
 }
 
-func handleIndexPage(r *http.Request) string {
+func handleIndexPage(r *http.Request, headers http.Header) (string, error) {
 	indexPageProps := pages.PrepareIndexPageProps()
 
-	response, err := server.GetAndRenderTemplate(pages.INDEX_PAGE, indexPageProps)
+	response, err := templates.RenderPage(pages.INDEX_PAGE, indexPageProps)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	return response
+	return response, nil
 }
 
 func main() {
-	err := datamining.UpdateStorageFromInternet()
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("FINISH")
-	os.Exit(0)
+	server.AddHandler(paths.PAGE_INDEX, handleIndexPage)
+	server.AddHandler(paths.PAGE_TOP, handleListPage)
 
-	server.AddHandler(pages.INDEX_PAGE.Url, handleIndexPage)
-	server.AddHandler(pages.TOP_PAGE.Url, handleListPage)
+	server.AddHandler(paths.REQUEST_GAMES_EXTRAS, handlers.HandleGamesExtrasQuery)
 
 	server.AddStatic()
 

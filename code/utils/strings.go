@@ -10,3 +10,7 @@ func FormFullFilename(entityId int, extensionString string) string {
 
 	return strconv.Itoa(int(entityId)) + "." + extensionString[extensionIndex:]
 }
+
+func StaticJs(filename string) string {
+	return "static/js/" + filename
+}

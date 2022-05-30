@@ -1,0 +1,36 @@
+const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+
+function enrichGamesWithExtras() {
+    const gamesExtrasJson = `{{.GamesExtrasJson}}`;
+
+    const gamesExtras = JSON.parse(gamesExtrasJson);
+
+    document.querySelectorAll(".game").forEach((gameElement) => {
+        const gameId = gameElement.dataset.geekId;
+
+        const gameExtraHtml = formGameExtraHtml(gameId, gamesExtras[gameId])
+
+        gameElement.insertAdjacentHTML('beforeend', gameExtraHtml);
+    });
+}
+
+function formGameExtraHtml(gameGeekId, gameExtra) {
+    const description = gameExtra.d;
+    const pictures = gameExtra.p.sort(collator.compare);
+    
+    let picturesHtml = ""
+    pictures.forEach((pictureFilename) =>
+        picturesHtml += `<img class="gameExtraPictureImg lazyload" data-src="/static/images/gameimages/${gameGeekId}/${pictureFilename}" />`
+    );
+
+    return `
+        <div class="gameExtraBorder hidden"></div>
+        <div class="gameExtra hidden">
+            <div class="gameExtraPictures">${picturesHtml}</div>
+            <div class="gameDescription">${description}</div>
+            <img class="gameExtraPicturesMainImg lazyload" data-src="/static/images/gameimages/${gameGeekId}/${pictures[0]}" />
+        </div>
+    `;
+}
+
+enrichGamesWithExtras();

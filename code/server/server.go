@@ -1,59 +1,19 @@
 package server
 
 import (
-	"errors"
 	"fmt"
-	"html/template"
-	"hundred-board-games/code/server/pages"
+	"hundred-board-games/code/handlers"
+	"hundred-board-games/code/pages"
+	"hundred-board-games/code/templates"
 	"net/http"
-	"strings"
-	"time"
 )
-
-type props struct {
-	Global globalProps
-	Page   pageProps
-}
-
-type globalProps struct {
-	PageTitle string
-	Now       uint
-}
-
-type pageProps any
-
-var templates *template.Template = template.Must(template.ParseGlob("templates/*"))
-
-func GetAndRenderTemplate(page pages.Page, pageProps any) (string, error) {
-	template := templates.Lookup(page.TemplateName + ".tmpl")
-	if template == nil {
-		return "", errors.New("no template found")
-	}
-
-	templateProps := props{
-		Global: globalProps{
-			PageTitle: page.Title,
-			Now:       uint(time.Now().Unix()),
-		},
-		Page: pageProps,
-	}
-
-	var stringBuilder strings.Builder
-
-	err := template.Execute(&stringBuilder, templateProps)
-	if err != nil {
-		return "", err
-	}
-
-	return stringBuilder.String(), nil
-}
 
 func AddStatic() {
 	fs := http.FileServer(http.Dir("static/"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 }
 
-func AddHandler(url string, handler func(request *http.Request) string) {
+func AddHandler(url string, handler handlers.Handler) {
 	path := "/" + url + "/"
 	if url == pages.INDEX_PAGE.Url {
 		path = "/"
@@ -61,9 +21,15 @@ func AddHandler(url string, handler func(request *http.Request) string) {
 
 	http.HandleFunc(path, func(writer http.ResponseWriter, request *http.Request) {
 		//debug
-		templates = template.Must(template.ParseGlob("templates/*"))
+		templates.Reload()
 
-		fmt.Fprint(writer, handler(request))
+		response, err := handler(request, writer.Header())
+		if err != nil {
+			fmt.Fprint(writer, "Sorry")
+			fmt.Println(err)
+		}
+
+		fmt.Fprint(writer, response)
 	})
 }
 

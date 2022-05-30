@@ -5,10 +5,11 @@ type Page struct {
 	TemplateName string
 	Title        string
 	Url          string
+	JsPaths      []string
 }
 
-func newPage(codeName, templateName, title, url string) Page {
-	return Page{codeName, templateName, title, url}
+func newPage(codeName, templateName, title, url string, jsPaths ...string) Page {
+	return Page{codeName, templateName, title, url, jsPaths}
 }
 
 var ALL_PAGES = []Page{
