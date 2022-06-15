@@ -1,30 +1,36 @@
 package datamining
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"hundred-board-games/code/games"
 	"hundred-board-games/code/utils"
+	"image"
+	"image/jpeg"
+	"image/png"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
+	"time"
 )
 
-func UpdateStorageFromInternet() error {
-	const pagesToRead = 10
-
+func UpdateStorageFromInternet(pagesToRead uint) error {
 	gamesIds, err := queryGamesIds(pagesToRead)
 	if err != nil {
 		return err
 	}
 
-	for _, gameId := range gamesIds {
-		fmt.Print("Start game #", gameId, ". ")
+	for gameIndex, gameId := range gamesIds {
+		fmt.Printf("Start game %v. #%v. ", gameIndex, gameId)
 		err = downloadGameData(gameId)
 		if err != nil {
 			return err
 		}
-		fmt.Println("Finish game #", gameId)
+		fmt.Printf("Finish game #%v\n", gameId)
+		time.Sleep(15 * time.Second)
 	}
 
 	return nil
@@ -57,20 +63,22 @@ func queryGamesIds(pagesToRead uint) ([]uint, error) {
 func downloadGameData(gameId uint) error {
 	game, err := queryGameFields(gameId)
 	if err != nil {
-		return nil
-	}
-
-	err = downloadGameCover(game.PictureUrl, gameId)
-	if err != nil {
-		return nil
-	}
-
-	err = downloadGameImages(gameId)
-	if err != nil {
-		return nil
+		return err
 	}
 
 	err = saveGameAsJson(*game)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+	err = downloadGameCover(game.PictureUrl, gameId)
+	if err != nil {
+		return err
+	}
+
+	err = downloadGameImages(gameId)
 	if err != nil {
 		return err
 	}
@@ -96,7 +104,7 @@ func queryGameFields(gameId uint) (*games.Game, error) {
 }
 
 func downloadGameCover(pictureUrl string, gameId uint) error {
-	fileName := utils.FormFullFilename(int(gameId), pictureUrl)
+	fileName := utils.FormFullFilename(fmt.Sprint(gameId), pictureUrl)
 	filePath := filepath.Join("static", "images", "covers", fileName)
 
 	if _, err := os.Stat(filePath); err == nil {
@@ -132,7 +140,32 @@ func downloadGameCover(pictureUrl string, gameId uint) error {
 }
 
 func downloadGameImages(gameBggId uint) error {
-	url := fmt.Sprintf("https://api.geekdo.com/api/images?gallery=game&pageid=1&showcount=50&size=thumb&sort=hot&objectid=%v", gameBggId)
+	urlsMap := make(map[string]string, 2)
+	urlsMap["a"] = fmt.Sprintf("https://api.geekdo.com/api/images?gallery=game&pageid=1&showcount=50&size=thumb&sort=hot&tag=play&objectid=%v", gameBggId)
+	urlsMap["b"] = fmt.Sprintf("https://api.geekdo.com/api/images?gallery=game&pageid=1&showcount=50&size=thumb&sort=hot&objectid=%v", gameBggId)
+
+	for prefix, url := range urlsMap {
+		err := downloadGameImagesByUrl(gameBggId, url, prefix)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func downloadGameImagesByUrl(gameBggId uint, url string, imageFilenamePrefix string) error {
+	imagesFolderPath := games.FormGameImagesPath(gameBggId)
+	err := os.MkdirAll(imagesFolderPath, os.ModePerm)
+	if err != nil {
+		return err
+	}
+
+	folderFilenames, err := utils.ListFolderFiles(imagesFolderPath)
+	if err != nil {
+		return err
+	}
+
 	gameDataResponse, err := http.Get(url)
 	if err != nil {
 		return err
@@ -143,29 +176,87 @@ func downloadGameImages(gameBggId uint) error {
 		return err
 	}
 
-	for imageIndex, imageUrl := range imagesUrls {
-		imageFileResponse, err := http.Get(imageUrl)
-		if err != nil {
-			return nil
-		}
-
-		bytesBuffer, err := utils.ReaderToBytes(imageFileResponse.Body)
-		if err != nil {
-			return nil
-		}
-
-		filename := utils.FormFullFilename(imageIndex, imageUrl)
-		imagePath := filepath.Join(games.FormGameImagesPath(gameBggId), filename)
-
-		err = os.MkdirAll(filepath.Dir(imagePath), os.ModePerm)
+	for _, imageUrl := range imagesUrls {
+		imageId, imageExtension, err := parseImageUrl(imageUrl)
 		if err != nil {
 			return err
 		}
-		err = os.WriteFile(imagePath, bytesBuffer, 0600)
+
+		if utils.AnyStringHasSubstring(folderFilenames, imageId) {
+			continue
+		}
+
+		imageFileResponse, err := http.Get(imageUrl)
+		if err != nil {
+			return err
+		}
+
+		imageBytes, err := utils.ReaderToBytes(imageFileResponse.Body)
+		if err != nil {
+			return err
+		}
+
+		imageFilenamePrefix, err = updateImagePrefix(imageBytes, imageExtension, imageFilenamePrefix)
+		if err != nil {
+			return err
+		}
+
+		filename := utils.FormFullFilename(imageFilenamePrefix+imageId, imageUrl)
+		imagePath := filepath.Join(imagesFolderPath, filename)
+
+		err = os.WriteFile(imagePath, imageBytes, 0600)
 		if err != nil {
 			return err
 		}
 	}
 
 	return nil
+}
+
+// expects url to end like ".../pic{id}.{ext}"
+func parseImageUrl(url string) (imageId string, imageExtension string, err error) {
+	idStartIndex := strings.LastIndex(url, "pic")
+	idEndIndex := strings.LastIndexByte(url, '.')
+
+	if idStartIndex == -1 || idEndIndex == -1 {
+		return "", "", errors.New("can't extract game id from url")
+	}
+
+	imageId = url[idStartIndex+3 : idEndIndex]
+
+	imageExtension = url[idEndIndex+1:]
+
+	return imageId, imageExtension, nil
+}
+
+func updateImagePrefix(imageBytes []byte, imageExtension string, oldPrefix string) (string, error) {
+	const prefixLast = "z"
+
+	imageBytesReader := bytes.NewReader(imageBytes)
+
+	var imageConfig image.Config
+	var err error
+	switch imageExtension {
+	case "jpg", "jpeg":
+		imageConfig, err = jpeg.DecodeConfig(imageBytesReader)
+	case "png":
+		imageConfig, err = png.DecodeConfig(imageBytesReader)
+	default:
+		err = errors.New("can't decode image due to unknown extension")
+	}
+
+	if err != nil {
+		fmt.Println("Error decoding image. " + err.Error())
+
+		return prefixLast, nil
+	}
+
+	newPrefix := oldPrefix
+
+	imageRatio := float64(imageConfig.Width) / float64(imageConfig.Height)
+	if imageRatio >= 2.0 || imageRatio <= 0.5 {
+		newPrefix = prefixLast
+	}
+
+	return newPrefix, nil
 }

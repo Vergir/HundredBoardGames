@@ -13,10 +13,10 @@
 
 .logo {
     font-family: "Acknowledgement";
-    font-size: 24px;
-    line-height: 40px;
+    font-size: 1.5rem;
+    line-height: 2.5rem;
     color: #FFF; 
-    text-shadow: 1px 1px 0px black;
+    text-shadow: 1px 1px 0px #000;
 }
 
 .logo:before {

@@ -1,16 +1,25 @@
 package utils
 
 import (
-	"strconv"
 	"strings"
 )
 
-func FormFullFilename(entityId int, extensionString string) string {
+func FormFullFilename(entityName string, extensionString string) string {
 	extensionIndex := strings.LastIndex(extensionString, ".") + len(".")
 
-	return strconv.Itoa(int(entityId)) + "." + extensionString[extensionIndex:]
+	return entityName + "." + extensionString[extensionIndex:]
 }
 
 func StaticJs(filename string) string {
 	return "static/js/" + filename
+}
+
+func AnyStringHasSubstring(ss []string, substr string) bool {
+	for _, s := range ss {
+		if strings.Contains(s, substr) {
+			return true
+		}
+	}
+
+	return false
 }

@@ -12,23 +12,37 @@ function enrichGamesWithExtras() {
 
         gameElement.insertAdjacentHTML('beforeend', gameExtraHtml);
     });
+
+    document.querySelectorAll('.gameExtraPictureImg').forEach(
+        pictureElement => pictureElement.addEventListener('click', handleExtraPictureClick)
+    );
+}
+
+function handleExtraPictureClick(pictureElement) {
+    console.log(pictureElement);
 }
 
 function formGameExtraHtml(gameGeekId, gameExtra) {
     const description = gameExtra.d;
     const pictures = gameExtra.p.sort(collator.compare);
     
-    let picturesHtml = ""
-    pictures.forEach((pictureFilename) =>
-        picturesHtml += `<img class="gameExtraPictureImg lazyload" data-src="/static/images/gameimages/${gameGeekId}/${pictureFilename}" />`
-    );
+    let smallPicturesHtml = `<div class="gameExtraSmallPicture gameExtraSmallPicture--active" data-pic-id="${pictures[0]}"><img class="gameExtraSmallPictureImg lazy" data-src="/static/images/gamesimages/${gameGeekId}/${pictures[0]}" /></div>`;
+    let bigPicturesHtml = `<img class="gameExtraBigPictureImg lazy" data-pic-id="${pictures[0]}" data-src="/static/images/gamesimages/${gameGeekId}/${pictures[0]}" />`;
+
+    pictures.slice(1).forEach((pictureFilename, index) => {
+        smallPicturesHtml += `<div class="gameExtraSmallPicture" data-pic-id="${pictureFilename}"><img class="gameExtraSmallPictureImg lazy" data-src="/static/images/gamesimages/${gameGeekId}/${pictureFilename}" /></div>`;
+        bigPicturesHtml += `<img class="gameExtraBigPictureImg lazy" data-pic-id="${pictureFilename}" data-src="/static/images/gamesimages/${gameGeekId}/${pictureFilename}" />`;
+    });
 
     return `
         <div class="gameExtraBorder hidden"></div>
         <div class="gameExtra hidden">
-            <div class="gameExtraPictures">${picturesHtml}</div>
-            <div class="gameDescription">${description}</div>
-            <img class="gameExtraPicturesMainImg lazyload" data-src="/static/images/gameimages/${gameGeekId}/${pictures[0]}" />
+            <div class="gameExtraSmallPictures">${smallPicturesHtml}</div>
+            <div class="gameExtraBigPictures">${bigPicturesHtml}</div>
+            <div class="gameExtraDescription">${description}</div>
+            <button class="gameExtraHideButton">
+                <div class="gameExpandArrow gameExpandArrow--reverse"></div>
+            </button>
         </div>
     `;
 }

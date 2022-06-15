@@ -1,0 +1,13 @@
+@import "global.css";
+
+#footer {
+    --font-color: hsl(150, 30%, 30%);
+    font-size: var(--font-size-tertiary);
+    text-align: center;
+    line-height: 1;
+    color: var(--font-color);
+}
+
+#footer a {
+    color: var(--font-color);
+}

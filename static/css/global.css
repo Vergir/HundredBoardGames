@@ -1,0 +1,49 @@
+@font-face {
+    font-family: 'Pragati Narrow';
+    src: url('/static/fonts/pragatinarrow-regular-webfont.woff2') format('woff2'),
+         url('/static/fonts/pragatinarrow-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Pragati Narrow Bold';
+    src: url('/static/fonts/pragatinarrow-bold-webfont.woff2') format('woff2'),
+         url('/static/fonts/pragatinarrow-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html {
+    font-size: var(--font-size-default);
+    font-family: 'Pragati Narrow', sans-serif;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+b {
+    font-family: 'Pragati Narrow Bold', sans-serif;
+}
+
+p {
+    margin: 0;
+}
+
+p + p {
+    margin-top: revert;
+}
+
+*:focus-visible {
+    box-shadow: #000 0 0 0.2rem 0.1rem;
+    outline: none;
+}
+
+:root {    
+    --scaling-factor: 1.25vw;
+    --text-color: hsl(150, 40%, 10%);
+
+    --font-size-default: calc(12px + var(--scaling-factor));
+    --font-size-header: 1.5rem;
+    --font-size-secondary: 0.8rem;
+    --font-size-tertiary: 0.6rem;
+}
+

@@ -2,6 +2,7 @@ package datamining
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"hundred-board-games/code/games"
 	"hundred-board-games/code/utils"
@@ -74,7 +75,7 @@ func parseImagesUrlsJson(reader io.Reader) ([]string, error) {
 	}
 
 	err = json.Unmarshal(readerBytes, &pd)
-	if err != nil {
+	if err != nil && errors.Is(err, &json.UnmarshalTypeError{}) {
 		return nil, err
 	}
 
