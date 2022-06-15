@@ -26,11 +26,11 @@ function formGameExtraHtml(gameGeekId, gameExtra) {
     const description = gameExtra.d;
     const pictures = gameExtra.p.sort(collator.compare);
     
-    let smallPicturesHtml = `<div class="gameExtraSmallPicture gameExtraSmallPicture--active" data-pic-id="${pictures[0]}"><img class="gameExtraSmallPictureImg lazy" data-src="/static/images/gamesimages/${gameGeekId}/${pictures[0]}" /></div>`;
+    let smallPicturesHtml = `<picture class="gameExtraSmallPicture gameExtraSmallPicture--active" data-pic-id="${pictures[0]}"><img class="gameExtraSmallPictureImg lazy" data-src="/static/images/gamesimages/${gameGeekId}/${pictures[0]}" /></picture>`;
     let bigPicturesHtml = `<img class="gameExtraBigPictureImg lazy" data-pic-id="${pictures[0]}" data-src="/static/images/gamesimages/${gameGeekId}/${pictures[0]}" />`;
 
     pictures.slice(1).forEach((pictureFilename, index) => {
-        smallPicturesHtml += `<div class="gameExtraSmallPicture" data-pic-id="${pictureFilename}"><img class="gameExtraSmallPictureImg lazy" data-src="/static/images/gamesimages/${gameGeekId}/${pictureFilename}" /></div>`;
+        smallPicturesHtml += `<picture class="gameExtraSmallPicture" data-pic-id="${pictureFilename}"><img class="gameExtraSmallPictureImg lazy" data-src="/static/images/gamesimages/${gameGeekId}/${pictureFilename}" /></picture>`;
         bigPicturesHtml += `<img class="gameExtraBigPictureImg lazy" data-pic-id="${pictureFilename}" data-src="/static/images/gamesimages/${gameGeekId}/${pictureFilename}" />`;
     });
 
