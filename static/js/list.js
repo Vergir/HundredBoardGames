@@ -113,7 +113,7 @@ function handleGameExtraHideButtonClick(event) {
     const buttonElement = this;
     const gameElement = this.closest('.game');
 
-    const needToShiftFocus = (document.activeElement == buttonElement)
+    const needToShiftFocus = (document.activeElement === buttonElement)
     if (needToShiftFocus) {
         this.closest('.game').querySelector('.gameMoreButton').focus();
     }
@@ -147,24 +147,99 @@ function showAttributeTooltip(gameAttributeElement) {
 function getTooltipContent(element) {
     let content = '';
     const gameElement = element.closest('.game');
-    if (element.classList.contains('gameComplexity')) {
-        const badge = '<span class="gameMainAttribute gameComplexity">' + Lang.get('badge_game_complexity') + '</span>';
-        const commonDescription = Lang.expand(Lang.get('game_complexity_description_common'), {'badge': badge});
-        const specificDescriptionTokens = {
-            'game': `<i>${gameElement.dataset.title}</i>`,
-            'weight': '<b>' + (parseFloat(gameElement.dataset.avgWeight) * 2).toFixed(1) + '&nbsp;/&nbsp;10.0</b>',
-            'weight_num': `<b>${gameElement.dataset.weightNumVotes}</b>`,
-            'complexity': element.outerHTML.replace('tabindex="0"', ''),
-        };
-        const specificDescription = Lang.expand(Lang.get('game_complexity_description_specific'), specificDescriptionTokens);
-        const label = `<p>${commonDescription}</p><p>${specificDescription}</p>`
-        return label;
-    } else {        
-        content = 'We don\'t know about that';
+    const elementTypeClass = element.classList[element.classList.length-1];
+    const isAttributeWithTooltip = ['gameComplexity', 'gameNumPlayers', 'gameLength'].includes(elementTypeClass);
+    if (!isAttributeWithTooltip) {
+        return '...';
     }
 
-    return content;
+    const badge = `<span class="gameMainAttribute ${elementTypeClass}">` + Lang.get(`badge_${elementTypeClass}`) + '</span>';
+    const commonDescription = Lang.expand(Lang.get(`description_common_${elementTypeClass}`), {'badge': badge});
+
+    let specificDescriptionTokens = {
+        'game': `<i>${gameElement.dataset.title}</i>`,
+        'attribute': element.outerHTML.replace('tabindex="0"', ''),
+    };
+    switch (elementTypeClass) {
+        case 'gameComplexity':
+            specificDescriptionTokens = {
+                ...specificDescriptionTokens,
+                'weight': '<b>' + (parseFloat(gameElement.dataset.avgWeight) * 2).toFixed(1) + '&nbsp;/&nbsp;10.0</b>',
+                'weight_num': `<b>${gameElement.dataset.weightNumVotes}</b>`,
+            };
+            break;
+        case 'gameNumPlayers':
+            const gameNumSpecificDescriptionTokens = formNumPlayersSpecificTooltipTokens(gameElement);
+            specificDescriptionTokens = {
+                ...specificDescriptionTokens,
+                ...gameNumSpecificDescriptionTokens,
+            };
+            break;
+    }
+    const specificDescription = Lang.expand(Lang.get(`description_specific_${elementTypeClass}`), specificDescriptionTokens);
+    const label = `<p>${commonDescription}</p><p>${specificDescription}</p>`;
+
+    return label;
 }
+
+function formNumPlayersSpecificTooltipTokens(gameElement) {
+    const numPlayers = gameElement.querySelector('.gameNumPlayers').innerText;
+    let [minPlayers, maxPlayers] = [0, 0];
+    if (numPlayers.includes('-')) {
+        [minPlayers, maxPlayers] = numPlayers.split('-').map(Number);
+    } else {
+        [minPlayers, maxPlayers] = [Number(numPlayers), Number(numPlayers)];
+    }
+
+    const communityNumPlayersDataset = gameElement.querySelector('.communityNumPlayers').dataset;
+    let bestNumPlayers = 0;
+    let bestNumPlayersVotes = 0;
+    let communityMinPlayers = 0;
+    let communityMaxPlayers = 0;
+    Object.values(communityNumPlayersDataset).forEach((codedData) => {
+        const [numPlayers, votedBest, votedRecommended, votedNotRecommended] = codedData.split(',').map(Number);
+        if (votedBest > bestNumPlayersVotes) {
+            bestNumPlayers = numPlayers;
+            bestNumPlayersVotes = votedBest;
+        }
+
+        const hasCommunityMinPlayers = (numPlayers < minPlayers) && (votedRecommended > votedNotRecommended);
+        const hasCommunityMaxPlayers = (numPlayers > maxPlayers) && (votedRecommended > votedNotRecommended);
+        if (hasCommunityMinPlayers) {
+            communityMinPlayers = numPlayers
+        }
+        if (hasCommunityMaxPlayers) {
+            communityMaxPlayers = numPlayers
+        }
+    });
+
+    const communityPlayersClauses = [];
+    if (communityMinPlayers) {
+        const peopleLabel = '<b>' + Lang.numPeople(communityMinPlayers) + '</b>';
+        const minPlayersClause = Lang.expand(Lang.get('community_num_players_clause_min'), {'num_people': peopleLabel});
+        communityPlayersClauses.push(minPlayersClause);
+    }
+    if (communityMaxPlayers) {
+        const peopleLabel = '<b>' + Lang.numPeople(communityMaxPlayers) + '</b>';
+        const maxPlayersClause = Lang.expand(Lang.get('community_num_players_clause_max'), {'num_people': peopleLabel});
+        communityPlayersClauses.push(maxPlayersClause);
+    }
+    let communityNumPlayers = '';
+    if (communityPlayersClauses.length) {
+        const communityNumPlayersTokens = {
+            'clauses': communityPlayersClauses.join(Lang.get('community_num_players_clauses_link')),
+        };
+        communityNumPlayers = Lang.expand(Lang.get('community_num_players'), communityNumPlayersTokens);
+    }
+
+    const tokens = {
+        'community_num_players': communityNumPlayers,
+        'num_people': '<b>' + Lang.numPeople(bestNumPlayers) + '</b>',
+    }
+
+    return tokens;
+}
+
 
 function hideTooltips() {
     [...document.getElementsByClassName('tooltip')].forEach(

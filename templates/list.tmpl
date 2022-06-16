@@ -2,6 +2,11 @@
 <ul class="gamesList">
     {{range .Page.Games}}
         <li class="game" data-geek-id="{{.GeekId}}" data-avg-weight="{{.AvgWeight}}" data-weight-num-votes="{{.WeightNumVotes}}" tabindex="0">
+            <div class="communityNumPlayers hidden"
+                {{range $i, $e := .CommunityNumPlayers}}
+                    data-players{{$i}}="{{$e.NumPlayers}},{{$e.VotedBest}},{{$e.VotedRecommended}},{{$e.VotedNotRecommended}}"
+                {{end}}
+            ></div>
             <div class="{{.RankClass}}">{{.Rank}}</div>
             <div class="gameRating">{{.Rating}}</div>
             <img class="gamePictureImg lazy" data-src="{{.CardPictureUrl}}" src="/static/images/other/question100.png"/>
