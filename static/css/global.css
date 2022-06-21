@@ -1,3 +1,6 @@
+@import "header.css";
+@import "footer.css";
+
 @font-face {
     font-family: 'Pragati Narrow';
     src: url('/static/fonts/pragatinarrow-regular-webfont.woff2') format('woff2'),
@@ -18,6 +21,30 @@ html {
     font-family: 'Pragati Narrow', sans-serif;
     line-height: 1.5;
     color: var(--text-color);
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: hsl(150, 15%, 85%);
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+header {
+    grid-row: 1;
+}
+main {
+    grid-row: 2;
+}
+footer {
+    grid-row: 3;
+}
+
+a {
+    color: hsl(150, 100%, 15%);
 }
 
 b {
@@ -48,3 +75,27 @@ p + p {
     --font-size-tertiary: 0.6rem;
 }
 
+/**/
+
+#header {
+    background: hsl(150, 50%, 25%);
+    padding-left: 0.5rem;
+}
+
+.logo {
+    font-family: "Acknowledgement";
+    font-size: 1.5rem;
+    line-height: 2.5rem;
+    color: #FFF; 
+    text-shadow: 0 0 0.1rem #000;
+}
+
+.logo:before {
+    content: "100BG";
+}
+
+@media (min-width: 640px) {
+    .logo:before {
+        content: "100 Board Games";
+    }
+}

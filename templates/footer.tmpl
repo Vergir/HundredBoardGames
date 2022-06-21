@@ -1,10 +1,10 @@
-    </div>
-    <div id="footer">
+    </main>
+    <footer>
         <div>© {{.Global.CurrentYear}} 100 Board Games.</div>
         <div>Powered by <a href="https://boardgamegeek.com" rel="noopener noreferrer" target="_blank">BoardGameGeek</a>.</div>
         <div>All rights reserved. All trademarks are property of their respective owners.</div>
-    </div>
-{{range .Global.JsPaths}}
-    <script type="module" src="/{{.}}"></script>
-{{end}}
+    </footer>
+    {{range .Global.JsPaths}}
+        <script type="module" src="/{{.}}"></script>
+    {{end}}
 </body>

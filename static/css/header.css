@@ -6,7 +6,7 @@
     font-style: normal;
 }
 
-#header {
+header {
     background: hsl(150, 50%, 25%);
     padding-left: 0.5rem;
 }
@@ -16,7 +16,7 @@
     font-size: 1.5rem;
     line-height: 2.5rem;
     color: #FFF; 
-    text-shadow: 1px 1px 0px #000;
+    text-shadow: 0 0 #000;
 }
 
 .logo:before {

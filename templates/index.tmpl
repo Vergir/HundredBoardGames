@@ -1,9 +1,12 @@
 {{ template "header.tmpl" . }}
-<ul>
-    {{range .Page.Chapters}}
-        <li>
-            <a href="{{.Url}}" >{{.Title}}</a>
-        </li>
-    {{end}}
-</ul>
+    <h1 id="titleHeader">Hundred Board Games</h1>
+    <p>{{.Page.Intro}} <a href="/about" id="aboutAnchor" target="_blank" rel="noopener noreferrer">{{.Page.About}}</a></p>
+    <div class="buttonSection">
+        <p>{{.Page.TopPrompt}}</p>
+        <a href="/top" class="linkButton">{{.Page.ButtonTop}}</a>
+    </div>
+    <div class="buttonSection">
+        <p>{{.Page.FilterPrompt}}</p>
+        <a href="/filter" class="linkButton">{{.Page.ButtonFilter}}</a>
+    </div>
 {{ template "footer.tmpl" . }}

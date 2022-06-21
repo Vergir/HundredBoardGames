@@ -16,9 +16,9 @@ type props struct {
 
 type globalProps struct {
 	PageTitle   string
-	Now         uint
 	CurrentYear uint
 	JsPaths     []string
+	CssPaths    []string
 }
 
 type pageProps any
@@ -39,12 +39,18 @@ func RenderPage(page pages.Page, pageProps any) (string, error) {
 		jsPaths[i] = jsPath
 	}
 
+	cssPaths := make([]string, len(page.CssPaths))
+	for i, cssPath := range page.CssPaths {
+		cssPath += fmt.Sprint("?v=", time.Now().Unix())
+		cssPaths[i] = cssPath
+	}
+
 	templateProps := props{
 		Global: globalProps{
 			PageTitle:   page.Title,
-			Now:         uint(time.Now().Unix()),
 			CurrentYear: uint(time.Now().Year()),
 			JsPaths:     jsPaths,
+			CssPaths:    cssPaths,
 		},
 		Page: pageProps,
 	}

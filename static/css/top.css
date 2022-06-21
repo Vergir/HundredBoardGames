@@ -1,6 +1,4 @@
 @import "global.css";
-@import "header.css";
-@import "footer.css";
 
 :root {
     --game-extra-picture-height: 300px;
@@ -8,13 +6,6 @@
     --game-extra-small-picture-arrow-size: 0.5rem;
 
     --game-extra-picture-border-hsl: hsl(150, 50%, 20%);
-}
-
-
-body {
-    margin: 0;
-    padding: 0;
-    background-color: hsl(150, 15%, 85%);
 }
 
 .gamesList {

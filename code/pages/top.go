@@ -15,8 +15,11 @@ import (
 	"strings"
 )
 
-var TOP_PAGE = newPage("top", "list", "Топ", paths.PAGE_TOP,
-	utils.StaticJs("common.js"), utils.StaticJs("lib/lazysizes.min.js"), paths.REQUEST_GAMES_EXTRAS, utils.StaticJs("list.js"))
+var TOP_PAGE = newPage(
+	"top", "list", "Топ", paths.PAGE_TOP,
+	[]string{utils.StaticJs("common.js"), utils.StaticJs("lib/lazysizes.min.js"), paths.REQUEST_GAMES_EXTRAS, utils.StaticJs("list.js")},
+	[]string{"top.css"},
+)
 
 type topPageTemplateProps struct {
 	Games []extendedGame

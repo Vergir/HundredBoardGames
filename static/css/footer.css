@@ -1,6 +1,6 @@
 @import "global.css";
 
-#footer {
+footer {
     --font-color: hsl(150, 30%, 30%);
     font-size: var(--font-size-tertiary);
     text-align: center;
@@ -8,6 +8,6 @@
     color: var(--font-color);
 }
 
-#footer a {
+footer a {
     color: var(--font-color);
 }

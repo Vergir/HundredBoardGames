@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"hundred-board-games/code/datamining"
 	"hundred-board-games/code/games"
 	"hundred-board-games/code/handlers"
@@ -28,19 +27,8 @@ func handleListPage(r *http.Request, headers http.Header) (string, error) {
 	return response, nil
 }
 
-func handleIndexPage(r *http.Request, headers http.Header) (string, error) {
-	indexPageProps := pages.PrepareIndexPageProps()
-
-	response, err := templates.RenderPage(pages.INDEX_PAGE, indexPageProps)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return response, nil
-}
-
 func main() {
-	server.AddHandler(paths.PAGE_INDEX, handleIndexPage)
+	server.AddHandler(paths.PAGE_INDEX, handlers.HandleIndexPage)
 	server.AddHandler(paths.PAGE_TOP, handleListPage)
 
 	server.AddHandler(paths.REQUEST_GAMES_EXTRAS, handlers.HandleGamesExtrasQuery)

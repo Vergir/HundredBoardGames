@@ -1,0 +1,55 @@
+@import "global.css";
+
+:root {
+    --button-text-color: hsl(150, 20%, 95%);
+    --button-border-color: hsl(150, 25%, 25%);
+}
+
+#titleHeader {
+    font-family: 'Acknowledgement', serif;
+    text-align: center;
+    line-height: 1;
+    font-size: 5.45vw;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+p {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    max-width: 66ch;
+}
+
+.buttonSection {
+    margin-top: 1rem;
+}
+
+.linkButton {
+    text-decoration: none;
+    border-top: 1px solid var(--button-border-color);
+    border-bottom: 1px solid var(--button-border-color);
+    display: block;
+    line-height: 3rem;
+    font-size: 1.5rem;
+    position: relative;
+    padding-left: 1rem;
+    background: hsl(150, 25%, 40%);
+    color: var(--button-text-color);
+}
+
+.linkButton::after {
+    content: '';
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 0.1rem solid var(--button-text-color);
+    border-left: 0;
+    border-top: 0;
+    transform: rotate(315deg);
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+}
+
+#buttonFilter {
+
+}
