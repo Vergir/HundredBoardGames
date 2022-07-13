@@ -1,0 +1,10 @@
+browser_title: Hundred Board Games
+a11y_title: Index page
+
+intro: A website that ranks board games. The algorithm looks at how people rate games and applies math to do the ranking.
+about_preface: More info on 
+about_link: About page
+top_text: See the list of highest ranked games
+top_button: Top games
+filter_text: Or search for a particular game
+filter_button: Seach tool

@@ -6,7 +6,7 @@ import (
 )
 
 var INDEX_PAGE = newPage(
-	"index", "index", "Hundred Board Games", paths.PAGE_INDEX,
+	"index", "index", "index", paths.PAGE_INDEX,
 	[]string{utils.StaticJs("common.js")},
 	[]string{"index.css"},
 )

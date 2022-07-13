@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"hundred-board-games/code/handlers"
+	"hundred-board-games/code/i18n"
 	"hundred-board-games/code/pages"
 	"hundred-board-games/code/templates"
 	"net/http"
@@ -20,8 +21,9 @@ func AddHandler(url string, handler handlers.Handler) {
 	}
 
 	http.HandleFunc(path, func(writer http.ResponseWriter, request *http.Request) {
+		i18n.Init()
 		//debug
-		templates.Reload()
+		reloadResources()
 
 		response, err := handler(request, writer.Header())
 		if err != nil {
@@ -31,6 +33,12 @@ func AddHandler(url string, handler handlers.Handler) {
 
 		fmt.Fprint(writer, response)
 	})
+}
+
+//use only for debug
+func reloadResources() {
+	i18n.LoadLocale(i18n.LOCALE_EN_GB)
+	templates.Reload()
 }
 
 func Start() error {

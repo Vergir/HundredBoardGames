@@ -29,6 +29,7 @@ func handleListPage(r *http.Request, headers http.Header) (string, error) {
 
 func main() {
 	server.AddHandler(paths.PAGE_INDEX, handlers.HandleIndexPage)
+	server.AddHandler(paths.PAGE_ABOUT, handlers.HandleAboutPage)
 	server.AddHandler(paths.PAGE_TOP, handleListPage)
 
 	server.AddHandler(paths.REQUEST_GAMES_EXTRAS, handlers.HandleGamesExtrasQuery)

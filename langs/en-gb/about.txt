@@ -1,0 +1,19 @@
+browser_title: 100BG • About
+a11y_title: About the website
+
+title: Hundred Board Games
+100bg: 100BG
+abbr: abbreviation
+intro: is a website that ranks board games.
+
+header_how_it_works: How it works.
+paragraph_how_it_works: An algorithm takes a game and all of the game's reviews it can find. It then applies mathematics to these reviews to assign the game a number. That number doesn't have a meaning to itself but it can be used as an indicator of how "good" or "fun" the game is. The algorithm then does this scoring process for many-many games until it has a list of games with a number next to each title. When someone visits 100BG the website displays the most high-numbered games.
+
+header_technical_details: Technical details. 
+paragraph_technical_details: The scoring algorithm is as simple as calculating a lower bound of Wilson score confidence interval for a Bernoulli parameter. You can read more about it on {blogpost}. Most of the data here, including games, descriptions, pictures etc. is kindly provided by {bgg}. If you like board games you should check out their website as well. The code for Hundred Board Games will soon be available on {github}.
+bgg: BoardGameGeek
+blogpost: blog post from Evan Miller
+github: GitHub
+
+header_contact: Contact.
+paragraph_contact: Send your message to Phlash9[at]gmail[dot]com.

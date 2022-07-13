@@ -1,0 +1,2 @@
+browser_title: 100BG • Top
+a11y_title: List of top games

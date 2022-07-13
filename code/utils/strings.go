@@ -4,10 +4,10 @@ import (
 	"strings"
 )
 
-func FormFullFilename(entityName string, extensionString string) string {
-	extensionIndex := strings.LastIndex(extensionString, ".") + len(".")
+func FormComplexFilename(fileName string, stringWithExtension string) string {
+	extensionIndex := strings.LastIndex(stringWithExtension, ".") + len(".")
 
-	return entityName + "." + extensionString[extensionIndex:]
+	return fileName + "." + stringWithExtension[extensionIndex:]
 }
 
 func StaticJs(filename string) string {

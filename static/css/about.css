@@ -1,0 +1,18 @@
+@import "global.css";
+
+main {
+    margin: 1rem;
+}
+
+p {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.paragraph_header {
+    display: inline;
+    margin: auto;
+    font-family: 'Pragati Narrow Bold', sans-serif;
+    font-size: var(--font-size-default);
+    font-weight: normal;
+}

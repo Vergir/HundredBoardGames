@@ -104,7 +104,7 @@ func queryGameFields(gameId uint) (*games.Game, error) {
 }
 
 func downloadGameCover(pictureUrl string, gameId uint) error {
-	fileName := utils.FormFullFilename(fmt.Sprint(gameId), pictureUrl)
+	fileName := utils.FormComplexFilename(fmt.Sprint(gameId), pictureUrl)
 	filePath := filepath.Join("static", "images", "covers", fileName)
 
 	if _, err := os.Stat(filePath); err == nil {
@@ -201,7 +201,7 @@ func downloadGameImagesByUrl(gameBggId uint, url string, imageFilenamePrefix str
 			return err
 		}
 
-		filename := utils.FormFullFilename(imageFilenamePrefix+imageId, imageUrl)
+		filename := utils.FormComplexFilename(imageFilenamePrefix+imageId, imageUrl)
 		imagePath := filepath.Join(imagesFolderPath, filename)
 
 		err = os.WriteFile(imagePath, imageBytes, 0600)

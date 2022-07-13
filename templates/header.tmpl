@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<head>
-    {{range .Global.CssPaths}}
-        <link rel="stylesheet" href="/static/css/{{.}}">
-    {{end}}
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>{{.Global.PageTitle}}</title>
-</head>
-<body>
-    <header>
-        <span class="logo"></span>
-    </header>
-    <main>
+<html lang="{{.Global.Lang}}">
+    <head>
+        {{range .Global.CssPaths}}
+            <link rel="stylesheet" href="/static/css/{{.}}">
+        {{end}}
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{{.Global.PageI18n.browser_title}}</title>
+    </head>
+    <body>
+        <h1 class="a11y-hide">{{.Global.PageI18n.a11y_title}}</h1>
+        <header>
+            <h2 class="a11y-hide">{{.Global.SharedI18n.a11y_header}}</h2>
+            <a class="logo" href="/"><span class="a11y-hide">To Index page</span></a>
+        </header>
+        <main>
+            <h2 class="a11y-hide">{{.Global.PageI18n.a11y_title}}</h2>

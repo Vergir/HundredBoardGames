@@ -1,0 +1,19 @@
+{{ template "header.tmpl" . }}
+<p id="intro"><!--
+--><h3 class="paragraph_header">{{.Global.PageI18n.title}}</h3> <!--
+-->(<b><abbr title="{{.Global.PageI18n.abbr}}">100BG</abbr></b>) <!--
+-->{{.Global.PageI18n.intro}}<!--
+--></p>
+<p id="how_it_works"><!--
+--><h3 class="paragraph_header">{{.Global.PageI18n.header_how_it_works}}</h3> <!--
+-->{{.Global.PageI18n.paragraph_how_it_works}}<!--
+--></p>
+<p id="technical details"> <!--
+--><h3 class="paragraph_header">{{.Global.PageI18n.header_technical_details}}</h3> <!--
+-->{{.Page.TechnicalDetailsHtml}}<!--
+--></p>
+<p id="contact"><!--
+--><h3 class="paragraph_header">{{.Global.PageI18n.header_contact}}</h3> <!--
+-->{{.Global.PageI18n.paragraph_contact}}<!--
+--></p>
+{{ template "footer.tmpl" . }}

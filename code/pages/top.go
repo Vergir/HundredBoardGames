@@ -16,7 +16,7 @@ import (
 )
 
 var TOP_PAGE = newPage(
-	"top", "list", "Топ", paths.PAGE_TOP,
+	"top", "list", "top", paths.PAGE_TOP,
 	[]string{utils.StaticJs("common.js"), utils.StaticJs("lib/lazysizes.min.js"), paths.REQUEST_GAMES_EXTRAS, utils.StaticJs("list.js")},
 	[]string{"top.css"},
 )
@@ -82,7 +82,7 @@ func PrepareTopPageProps(gamesList []games.Game) (*topPageTemplateProps, error) 
 			titleClass += " gameTitle--small95"
 		}
 
-		cardPictureFilename := utils.FormFullFilename(fmt.Sprint(game.GeekId), game.PictureUrl)
+		cardPictureFilename := utils.FormComplexFilename(fmt.Sprint(game.GeekId), game.PictureUrl)
 		cardPictureUrl := fmt.Sprint("/static/images/covers/200/", cardPictureFilename)
 
 		playtime := strconv.FormatUint(uint64(game.MinPlaytime), 10)

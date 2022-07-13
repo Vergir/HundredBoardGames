@@ -9,7 +9,7 @@
     font-family: 'Acknowledgement', serif;
     text-align: center;
     line-height: 1;
-    font-size: 5.45vw;
+    font-size: 5.5vw;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
 }
@@ -17,7 +17,6 @@
 p {
     margin-left: 1rem;
     margin-right: 1rem;
-    max-width: 66ch;
 }
 
 .buttonSection {

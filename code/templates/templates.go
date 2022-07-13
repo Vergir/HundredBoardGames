@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"hundred-board-games/code/i18n"
 	"hundred-board-games/code/pages"
 	"strings"
 	"time"
@@ -15,7 +16,9 @@ type props struct {
 }
 
 type globalProps struct {
-	PageTitle   string
+	Lang        string
+	SharedI18n  map[string]string
+	PageI18n    map[string]string
 	CurrentYear uint
 	JsPaths     []string
 	CssPaths    []string
@@ -40,6 +43,7 @@ func RenderPage(page pages.Page, pageProps any) (string, error) {
 	}
 
 	cssPaths := make([]string, len(page.CssPaths))
+	//debug
 	for i, cssPath := range page.CssPaths {
 		cssPath += fmt.Sprint("?v=", time.Now().Unix())
 		cssPaths[i] = cssPath
@@ -47,7 +51,9 @@ func RenderPage(page pages.Page, pageProps any) (string, error) {
 
 	templateProps := props{
 		Global: globalProps{
-			PageTitle:   page.Title,
+			Lang:        string(i18n.GetCurrentLocale()),
+			SharedI18n:  i18n.GetSection("shared"),
+			PageI18n:    i18n.GetSection(page.LangSection),
 			CurrentYear: uint(time.Now().Year()),
 			JsPaths:     jsPaths,
 			CssPaths:    cssPaths,

@@ -1,0 +1,2 @@
+a11y_header: Header
+a11y_footer: Footer

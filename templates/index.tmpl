@@ -1,12 +1,12 @@
 {{ template "header.tmpl" . }}
-    <h1 id="titleHeader">Hundred Board Games</h1>
-    <p>{{.Page.Intro}} <a href="/about" id="aboutAnchor" target="_blank" rel="noopener noreferrer">{{.Page.About}}</a></p>
+    <pre id="titleHeader">Hundred Board Games</pre>
+    <p>{{.Global.PageI18n.intro}} {{.Global.PageI18n.about_preface}} <a href="/about" id="aboutAnchor" target="_blank" rel="noopener noreferrer">{{.Global.PageI18n.about_link}}</a>.</p>
     <div class="buttonSection">
-        <p>{{.Page.TopPrompt}}</p>
-        <a href="/top" class="linkButton">{{.Page.ButtonTop}}</a>
+        <p>{{.Global.PageI18n.top_text}}</p>
+        <a href="/top" class="linkButton">{{.Global.PageI18n.top_button}}</a>
     </div>
     <div class="buttonSection">
-        <p>{{.Page.FilterPrompt}}</p>
-        <a href="/filter" class="linkButton">{{.Page.ButtonFilter}}</a>
+        <p>{{.Global.PageI18n.filter_text}}</p>
+        <a href="/filter" class="linkButton">{{.Global.PageI18n.filter_button}}</a>
     </div>
 {{ template "footer.tmpl" . }}

@@ -17,6 +17,7 @@ header {
     line-height: 2.5rem;
     color: #FFF; 
     text-shadow: 0 0 #000;
+    text-decoration: none;
 }
 
 .logo:before {
