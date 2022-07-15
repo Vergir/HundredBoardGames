@@ -1,37 +1,31 @@
 const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
 function enrichGamesWithExtras() {
-    const gamesExtrasJson = `{{.GamesExtrasJson}}`;
+    const gamesExtrasJson = `{{.Page.GamesExtrasJson}}`;
 
     const gamesExtras = JSON.parse(gamesExtrasJson);
 
     document.querySelectorAll(".game").forEach((gameElement) => {
         const gameId = gameElement.dataset.geekId;
+        const gameTitle = gameElement.querySelector('.gameTitle').textContent
 
-        const gameExtraHtml = formGameExtraHtml(gameId, gamesExtras[gameId])
+        const gameExtraHtml = formGameExtraHtml(gameId, gameTitle, gamesExtras[gameId])
 
         gameElement.insertAdjacentHTML('beforeend', gameExtraHtml);
     });
-
-    document.querySelectorAll('.gameExtraPictureImg').forEach(
-        pictureElement => pictureElement.addEventListener('click', handleExtraPictureClick)
-    );
 }
 
-function handleExtraPictureClick(pictureElement) {
-    console.log(pictureElement);
-}
-
-function formGameExtraHtml(gameGeekId, gameExtra) {
+function formGameExtraHtml(gameGeekId, gameTitle, gameExtra) {
     const description = gameExtra.d;
     const pictures = gameExtra.p.sort(collator.compare);
+    const altText = `Photo of gameplay and/or game parts of ${gameTitle}`;
     
-    let smallPicturesHtml = `<picture class="gameExtraSmallPicture gameExtraSmallPicture--active" data-pic-id="${pictures[0]}"><img class="gameExtraSmallPictureImg lazy" data-src="/static/images/gamesimages/${gameGeekId}/${pictures[0]}" /></picture>`;
-    let bigPicturesHtml = `<img class="gameExtraBigPictureImg lazy" data-pic-id="${pictures[0]}" data-src="/static/images/gamesimages/${gameGeekId}/${pictures[0]}" />`;
+    let smallPicturesHtml = `<picture class="gameExtraSmallPicture gameExtraSmallPicture--active" data-pic-id="${pictures[0]}"><img alt="${altText}" class="gameExtraSmallPictureImg lazy" data-src="/static/images/gamesimages/${gameGeekId}/${pictures[0]}" /></picture>`;
+    let bigPicturesHtml = `<img alt="{$altText}" class="gameExtraBigPictureImg lazy" data-pic-id="${pictures[0]}" data-src="/static/images/gamesimages/${gameGeekId}/${pictures[0]}" />`;
 
     pictures.slice(1).forEach((pictureFilename, index) => {
-        smallPicturesHtml += `<picture class="gameExtraSmallPicture" data-pic-id="${pictureFilename}"><img class="gameExtraSmallPictureImg lazy" data-src="/static/images/gamesimages/${gameGeekId}/${pictureFilename}" /></picture>`;
-        bigPicturesHtml += `<img class="gameExtraBigPictureImg lazy" data-pic-id="${pictureFilename}" data-src="/static/images/gamesimages/${gameGeekId}/${pictureFilename}" />`;
+        smallPicturesHtml += `<picture class="gameExtraSmallPicture" data-pic-id="${pictureFilename}"><img  alt="${altText}" class="gameExtraSmallPictureImg lazy" data-src="/static/images/gamesimages/${gameGeekId}/${pictureFilename}" /></picture>`;
+        bigPicturesHtml += `<img alt="${altText}" class="gameExtraBigPictureImg lazy" data-pic-id="${pictureFilename}" data-src="/static/images/gamesimages/${gameGeekId}/${pictureFilename}" />`;
     });
 
     return `
@@ -42,6 +36,7 @@ function formGameExtraHtml(gameGeekId, gameExtra) {
             <div class="gameExtraDescription">${description}</div>
             <button class="gamecardToggleButton gameExtraHideButton">
                 <div class="gameExpandArrow gameExpandArrow--reverse"></div>
+                <span class="a11y-hide">{{.Global.PageI18n.hide_more_info}}</span>
             </button>
         </div>
     `;

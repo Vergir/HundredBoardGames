@@ -15,13 +15,15 @@ const (
 	LOCALE_RU_RU locale = "ru-ru"
 )
 
+var i18nTokenReplacer = strings.NewReplacer("\\n", "\n", "&nbsp;", "\u00A0")
+
 //[section_foo] => {key_abc => lang_abc, key_def => lang_def, ...}
 //[section_bar] => {key_xyz => lang_xyz, key_shk => lang_shk, ...}
 var keys map[string]map[string]string
 
 func Init() error {
 	locale := GetCurrentLocale()
-	//todo: check if already inited to same locald and skip
+	//todo: check if already inited to same locale and skip
 
 	err := LoadLocale(locale)
 	if err != nil {
@@ -42,26 +44,42 @@ func LoadLocale(locale locale) error {
 
 	for _, sectionFilename := range sectionsFilenames {
 		sectionName, _, _ := strings.Cut(sectionFilename, ".")
-		keys[sectionName] = make(map[string]string)
 		sectionPath := filepath.Join(sectionsFilenamesPath, sectionFilename)
-		file, err := os.Open(sectionPath)
+
+		keys[sectionName], err = loadSection(sectionPath)
 		if err != nil {
-			return err
-		}
-		scanner := bufio.NewScanner(file)
-		for scanner.Scan() {
-			key, value, foundSomething := strings.Cut(scanner.Text(), ":")
-			if !foundSomething {
-				continue
-			}
-			keys[sectionName][key] = strings.ReplaceAll(strings.TrimSpace(value), "\\n", "\n")
-		}
-		if err := scanner.Err(); err != nil {
 			return err
 		}
 	}
 
 	return nil
+}
+
+func loadSection(sectionFilepath string) (map[string]string, error) {
+	sectionKeys := make(map[string]string)
+
+	file, err := os.Open(sectionFilepath)
+	if err != nil {
+		return nil, err
+	}
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		key, value, foundKey := strings.Cut(scanner.Text(), ":")
+		if !foundKey {
+			continue
+		}
+		sectionKeys[key] = i18nTokenReplacer.Replace(strings.TrimSpace(value))
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	if err = file.Close(); err != nil {
+		return nil, err
+	}
+
+	return sectionKeys, nil
 }
 
 func GetCurrentLocale() locale {

@@ -1,38 +1,18 @@
 package main
 
 import (
-	"hundred-board-games/code/datamining"
-	"hundred-board-games/code/games"
-	"hundred-board-games/code/handlers"
-	"hundred-board-games/code/pages"
 	"hundred-board-games/code/server"
-	"hundred-board-games/code/server/paths"
-	"hundred-board-games/code/templates"
-	"net/http"
+	"hundred-board-games/code/website/about"
+	"hundred-board-games/code/website/index"
+	"hundred-board-games/code/website/top"
+	"hundred-board-games/code/website/top/gamesextras"
 )
 
-func handleListPage(r *http.Request, headers http.Header) (string, error) {
-	gamesList, _ := datamining.ReadGamesFromStorage()
-	gamesList = games.GetTopGames(gamesList, games.RATING_ID_WILSON, 100)
-	dataPtr, err := pages.PrepareTopPageProps(gamesList)
-	if err != nil {
-		return "", err
-	}
-
-	response, err := templates.RenderPage(pages.TOP_PAGE, *dataPtr)
-	if err != nil {
-		return "", err
-	}
-
-	return response, nil
-}
-
 func main() {
-	server.AddHandler(paths.PAGE_INDEX, handlers.HandleIndexPage)
-	server.AddHandler(paths.PAGE_ABOUT, handlers.HandleAboutPage)
-	server.AddHandler(paths.PAGE_TOP, handleListPage)
-
-	server.AddHandler(paths.REQUEST_GAMES_EXTRAS, handlers.HandleGamesExtrasQuery)
+	server.AddEndpointHandler(index.ENDPOINT, index.HANDLER)
+	server.AddEndpointHandler(about.ENDPOINT, about.HANDLER)
+	server.AddEndpointHandler(top.ENDPOINT, top.HANDLER)
+	server.AddEndpointHandler(gamesextras.ENDPOINT, gamesextras.HANDLER)
 
 	server.AddStatic()
 

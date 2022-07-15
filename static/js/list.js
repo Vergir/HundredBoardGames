@@ -34,11 +34,13 @@ function IsSkipKeyboardEvent(event, targetElement) {
 
 function maximizeGameCard(gameElement) {
     gameElement.classList.add("game--big");
-    
+
     gameElement.querySelector(".gameExtraBorder").classList.remove('hidden');
     gameElement.querySelector(".gameExtra").classList.remove('hidden');
     gameElement.querySelector('.gameExpandArrow').classList.add('gameExpandArrow--reverse');
+    gameElement.querySelector('.gameMoreButton').querySelector('span').innerText = Lang.get('hide_more_info');
     gameElement.querySelectorAll(".gameExtraPictures lazy").forEach(pictureElement => pictureElement.classList.add('lazypreload'));
+    
     
     gameElement.scrollIntoView();
 }
@@ -49,6 +51,7 @@ function minimizeGameCard(gameElement) {
     gameElement.querySelector('.gameExtraBorder').classList.add('hidden');
     gameElement.querySelector('.gameExtra').classList.add('hidden');
     gameElement.querySelector('.gameExpandArrow').classList.remove('gameExpandArrow--reverse');
+    gameElement.querySelector('.gameMoreButton').querySelector('span').innerText = Lang.get('show_more_info');
 
     const needScroll = gameElement.getBoundingClientRect().top < 0;
     if (needScroll) {
@@ -191,12 +194,12 @@ function formNumPlayersSpecificTooltipTokens(gameElement) {
         [minPlayers, maxPlayers] = [Number(numPlayers), Number(numPlayers)];
     }
 
-    const communityNumPlayersDataset = gameElement.querySelector('.communityNumPlayers').dataset;
+    const communityNumPlayersList = gameElement.querySelector('.communityNumPlayers').innerText.substring(1).split('|');
     let bestNumPlayers = 0;
     let bestNumPlayersVotes = 0;
     let communityMinPlayers = 0;
     let communityMaxPlayers = 0;
-    Object.values(communityNumPlayersDataset).forEach((codedData) => {
+    Object.values(communityNumPlayersList).forEach((codedData) => {
         const [numPlayers, votedBest, votedRecommended, votedNotRecommended] = codedData.split(',').map(Number);
         if (votedBest > bestNumPlayersVotes) {
             bestNumPlayers = numPlayers;
@@ -240,7 +243,6 @@ function formNumPlayersSpecificTooltipTokens(gameElement) {
     return tokens;
 }
 
-
 function hideTooltips() {
     [...document.getElementsByClassName('tooltip')].forEach(
         tooltipElement => tooltipElement.remove()
@@ -259,10 +261,6 @@ function handleGameMainAttributeKbm(event) {
     hideTooltips();
     
     showAttributeTooltip(gameMainAttributeElement);
-}
-
-function initGame(gameElement) {
-    gameElement.dataset.title = gameElement.querySelector('.gameTitle').innerText;
 }
 
 function handleGameKeydown(event) {
@@ -292,6 +290,20 @@ function handleBodyKeydown(event) {
     }
 
     hideTooltips();
+}
+
+
+function initGame(gameElement) {
+    const gameTitle = gameElement.querySelector('.gameTitle').innerText
+
+    gameElement.dataset.title = gameTitle;
+
+    const gamePicture = gameElement.querySelector('.gamePictureImg');
+    gamePicture.alt = `Box cover for ${gameTitle}`;
+
+    const a11yButtonText = Lang.get('show_more_info');
+    const a11yButtonTextSpan = `<span class="a11y-hide">${a11yButtonText}</span>`;
+    gameElement.querySelector('.gameMoreButton').insertAdjacentHTML('beforeend', a11yButtonTextSpan);
 }
 
 function addHandlers(selector, handler, ...events) {

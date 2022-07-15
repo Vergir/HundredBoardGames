@@ -1,16 +1,20 @@
-package handlers
+package gamesextras
 
 import (
 	"encoding/json"
 	"html/template"
 	"hundred-board-games/code/datamining"
 	"hundred-board-games/code/games"
-	"hundred-board-games/code/pages"
 	"hundred-board-games/code/templates"
 	"hundred-board-games/code/utils"
+	"hundred-board-games/code/website"
+	"hundred-board-games/code/website/top"
 	"net/http"
 	"strings"
 )
+
+var ENDPOINT = website.NewComplexEndpoint("gamesextras", "gamesextras.tmpl", "list", top.GAMESEXTRAS_URL, nil, nil)
+var HANDLER = HandleGamesExtrasQuery
 
 type gameExtra struct {
 	Description  string   `json:"d"`
@@ -23,9 +27,9 @@ type templateProps struct {
 	GamesExtrasJson template.HTML //not really html but is the only way to include unescaped json
 }
 
-func HandleGamesExtrasQuery(r *http.Request, headers http.Header) (string, error) {
-	base64gamesIds := r.URL.Query().Get("games")
-	gamesIds, err := pages.Base64ToGamesIds(base64gamesIds)
+func HandleGamesExtrasQuery(request *http.Request, headers http.Header) (string, error) {
+	base64gamesIds := request.URL.Query().Get("games")
+	gamesIds, err := top.Base64ToGamesIds(base64gamesIds)
 	if err != nil {
 		return "", err
 	}
@@ -57,7 +61,7 @@ func HandleGamesExtrasQuery(r *http.Request, headers http.Header) (string, error
 		return "", err
 	}
 
-	response, err := templates.RenderCustom("gamesExtras", templateProps{GamesExtrasJson: template.HTML(responseBytes)})
+	response, err := templates.RenderEndpoint(ENDPOINT, templateProps{GamesExtrasJson: template.HTML(responseBytes)})
 	if err != nil {
 		return "", err
 	}

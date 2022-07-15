@@ -17,6 +17,8 @@ function numPeople(num) {
 }
 
 const lang = {
+    'show_more_info': 'Show more info',
+    'hide_more_info': 'Hide more info',
     'badge_gameComplexity': 'Complexity',
     'description_common_gameComplexity': '{badge} measures how complex or difficult to understand the game is according to people who played it.',
     'description_specific_gameComplexity': '{game} has an average complexity {weight}, rated by {weight_num}&nbsp;people, thus marking it as {attribute}',
