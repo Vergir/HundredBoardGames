@@ -16,6 +16,19 @@
     font-style: normal;
 }
 
+:root {    
+    --background-color: hsl(150, 25%, 90%);
+
+    --scaling-factor: 1.25vw;
+    --text-color: hsl(150, 30%, 10%);
+
+    --font-size-default: calc(12px + var(--scaling-factor));
+    --font-size-header: 1.5rem;
+    --font-size-secondary: 0.8rem;
+    --font-size-tertiary: 0.6rem;
+}
+
+
 html {
     font-size: var(--font-size-default);
     font-family: 'Pragati Narrow', sans-serif;
@@ -65,18 +78,6 @@ p + p {
 *:focus-visible {
     box-shadow: #000 0 0 0.2rem 0.1rem;
     outline: none;
-}
-
-:root {    
-    --background-color: hsl(150, 25%, 90%);
-
-    --scaling-factor: 1.25vw;
-    --text-color: hsl(150, 30%, 10%);
-
-    --font-size-default: calc(12px + var(--scaling-factor));
-    --font-size-header: 1.5rem;
-    --font-size-secondary: 0.8rem;
-    --font-size-tertiary: 0.6rem;
 }
 
 .a11y-hide {
